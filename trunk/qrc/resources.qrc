@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>fileopen.png</file>
+        <file>resize.png</file>
+    </qresource>
+</RCC>
