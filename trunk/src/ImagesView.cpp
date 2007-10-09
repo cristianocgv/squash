@@ -23,11 +23,18 @@ ImagesView::ImagesView( QWidget *parent )
     setIconSize( QSize(150, 150) );
     setGridSize( QSize(170, 170) );
     setSpacing( 10 );
+    setSelectionMode( QAbstractItemView::ExtendedSelection );
 }
 
 void ImagesView::removeSelectedImages()
 {
-    qDebug() << "Here i should remove the selected images...";
+    QModelIndexList indexes = selectedIndexes();
+
+    if( indexes.isEmpty() )
+        return;
+
+    foreach( QModelIndex i, indexes )
+        model()->removeRows( i.row(), 1, QModelIndex() );
 }
 
 void ImagesView::contextMenuEvent( QContextMenuEvent *e )
@@ -45,7 +52,8 @@ void ImagesView::contextMenuEvent( QContextMenuEvent *e )
         return;
 
     QMenu context( tr( "Actions" ), this );
-    context.addAction( tr( "Remove %1 image(s)" ).arg( indexes.size() ), this, SLOT( removeSelectedImages() ) );
+    QString text = tr( "Remove %n image(s)", "", indexes.size() );
+    context.addAction( text, this, SLOT( removeSelectedImages() ) );
 
     context.exec( e->globalPos() );
 }
