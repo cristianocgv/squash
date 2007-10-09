@@ -1,0 +1,41 @@
+TARGET = squeeze
+QT = core gui
+CONFIG -= app_bundle lib_bundle ppc
+#-------------------------------------------------------------------------------
+
+SOURCES = $$system( find src -name \*.cpp -not -name qrc_resources.cpp -print -o -name build -prune )
+HEADERS = $$system( find src -name \*.h -print -o -name build -prune)
+FORMS = $$system( find src -name \*.ui )
+RESOURCES = qrc/resources.qrc
+
+#-------------------------------------------------------------------------------
+
+OBJECTS_DIR = build
+MOC_DIR = build
+UI_DIR = build
+
+# precompiled headers breaks icecream builds for some reason :(
+#unix:system( test `ps aux | grep iceccd | wc -l` -gt 1 ): CONFIG -= precompile_header
+#-------------------------------------------------------------------------------
+
+debug {
+	QMAKE_CXXFLAGS_DEBUG = -ggdb
+}
+#-------------------------------------------------------------------------------
+
+release {
+    linux* {
+        QMAKE_CXXFLAGS_RELEASE = -O3 -freorder-blocks -fno-reorder-functions -fomit-frame-pointer -gstabs+
+    }
+    mac* {
+        QMAKE_CXXFLAGS_RELEASE = -O3 -g -fomit-frame-pointer
+    }
+    win32 {
+        QMAKE_CXXFLAGS_RELEASE = -Zi -Oy -Ox -GL -MD
+        QMAKE_LFLAGS_RELEASE = /ltcg
+    }
+    
+#    QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
+	CONFIG += warn_off
+}
+#-------------------------------------------------------------------------------

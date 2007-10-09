@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$1" = "--xcode" ]
+then
+	qmake-qt4 -spec macx-xcode Makefile.qmake || exit 1
+	echo
+	echo Configure done. Now type: open Squeeze.xcodeproj
+	echo
+else
+    if [ "$1" == "--debug" ]
+    then
+        qmake-qt4 Makefile.qmake "CONFIG -= release" "CONFIG += debug" || exit 1
+    else
+	    qmake-qt4 Makefile.qmake "CONFIG += release" "CONFIG -= debug" || exit 1
+	fi
+	
+	echo
+	echo "Configure done. Now type make"
+	echo
+fi
