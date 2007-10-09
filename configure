@@ -1,4 +1,5 @@
 #!/bin/bash
+# written by Max Howell
 
 if [ "$1" = "--xcode" ]
 then
