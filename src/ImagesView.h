@@ -19,7 +19,8 @@ class ImagesView : public QListView
         ImagesView( QWidget *parent = 0 );
 
     protected:
-        void contextMenuEvent( QContextMenuEvent *e );
+        void contextMenuEvent( QContextMenuEvent *event );
+        void keyPressEvent( QKeyEvent *event );
 
     private slots:
         void removeSelectedImages();
