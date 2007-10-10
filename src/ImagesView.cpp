@@ -45,6 +45,8 @@ void ImagesView::contextMenuEvent( QContextMenuEvent *event )
         QItemSelectionModel *selectModel = selectionModel();
         selectModel->select( current, QItemSelectionModel::Select );
     }
+    else
+        return;
 
     QModelIndexList indexes = selectedIndexes();
 
