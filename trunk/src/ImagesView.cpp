@@ -37,9 +37,9 @@ void ImagesView::removeSelectedImages()
         model()->removeRows( i.row(), 1, QModelIndex() );
 }
 
-void ImagesView::contextMenuEvent( QContextMenuEvent *e )
+void ImagesView::contextMenuEvent( QContextMenuEvent *event )
 {
-    QModelIndex current = indexAt( e->pos() );
+    QModelIndex current = indexAt( event->pos() );
     if( current.isValid() )
     {
         QItemSelectionModel *selectModel = selectionModel();
@@ -55,5 +55,15 @@ void ImagesView::contextMenuEvent( QContextMenuEvent *e )
     QString text = tr( "Remove %n image(s)", "", indexes.size() );
     context.addAction( text, this, SLOT( removeSelectedImages() ) );
 
-    context.exec( e->globalPos() );
+    context.exec( event->globalPos() );
+}
+
+void ImagesView::keyPressEvent( QKeyEvent *event )
+{
+    if( event->matches( QKeySequence::Delete ) )
+    {
+        removeSelectedImages();
+        return;
+    }
+    QListView::keyPressEvent( event );
 }
