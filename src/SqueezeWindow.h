@@ -19,7 +19,7 @@ class SqueezeWindow : public QMainWindow
     Q_OBJECT
 
     public:
-       ~SqueezeWindow();
+       ~SqueezeWindow() { }
        static SqueezeWindow *instance()
        {
            if( !s_instance )
@@ -47,6 +47,9 @@ class SqueezeWindow : public QMainWindow
 
         void chooseSaveDirectory();
 
+    protected:
+        void closeEvent( QCloseEvent *event );
+
     private:
         SqueezeWindow( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
@@ -54,7 +57,8 @@ class SqueezeWindow : public QMainWindow
 
         void createToolBar();
 
-        void reloadConfig();
+        void readSettings();
+        void writeSettings();
 
         ImagesModel *m_imagesModel;
         ImagesView  *m_imageView;
