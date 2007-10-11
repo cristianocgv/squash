@@ -48,7 +48,7 @@ void SqueezeWindow::closeEvent( QCloseEvent *event )
 
 void SqueezeWindow::writeSettings()
 {
-    QSettings settings;
+    QSettings settings( QDir::current().filePath( "squeeze.ini" ), QSettings::IniFormat );
     settings.setValue( "resize/x-percent", widthPercentage() );
     settings.setValue( "resize/y-percent", heightPercentage() );
     settings.setValue( "resize/aspect-lock", ( m_aspectLock->checkState() == Qt::Checked ) );
@@ -62,7 +62,7 @@ void SqueezeWindow::writeSettings()
 
 void SqueezeWindow::readSettings()
 {
-    QSettings settings;
+    QSettings settings( QDir::current().filePath( "squeeze.ini" ), QSettings::IniFormat );
     int x_percent = settings.value( "resize/x-percent", 50 ).toInt();
     int y_percent = settings.value( "resize/y-percent", 50 ).toInt();
     bool lockAspect = settings.value( "resize/aspect-lock", true ).toBool();
