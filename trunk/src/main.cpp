@@ -10,10 +10,15 @@
 #include "SqueezeWindow.h"
 
 #include <QApplication>
+#include <QCoreApplication>
 
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
+
+    QCoreApplication::setOrganizationName("SebRuiz");
+    QCoreApplication::setOrganizationDomain("sebruiz.net");
+    QCoreApplication::setApplicationName("Squeeze");
 
     SqueezeWindow::instance()->show();
 

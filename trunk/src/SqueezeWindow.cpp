@@ -12,6 +12,7 @@
 
 #include <QDebug>
 #include <QtGui>
+#include <QSettings>
 
 SqueezeWindow *SqueezeWindow::s_instance = 0;
 
@@ -32,26 +33,56 @@ SqueezeWindow::SqueezeWindow( QWidget *parent, Qt::WindowFlags flags )
     createToolBar();
     statusBar(); // this tells QMainWindow to initialise the statusbar
 
-    reloadConfig();
+    readSettings();
 
     setCentralWidget( m_imageView );
 
     actionStatusSetter();
 }
 
-SqueezeWindow::~SqueezeWindow()
+void SqueezeWindow::closeEvent( QCloseEvent *event )
 {
-    // Save settings
+    writeSettings();
+    event->accept();
 }
 
-void SqueezeWindow::reloadConfig()
+void SqueezeWindow::writeSettings()
 {
-    m_resizeX->setValue( 50 );
-    m_resizeY->setValue( 50 );
+    QSettings settings;
+    settings.setValue( "resize/x-percent", widthPercentage() );
+    settings.setValue( "resize/y-percent", heightPercentage() );
+    settings.setValue( "resize/aspect-lock", ( m_aspectLock->checkState() == Qt::Checked ) );
 
-    m_saveDirectory->setText( QDir::toNativeSeparators( QDir::current().absolutePath() ) );
+    settings.setValue( "save/directory", saveDirectory() );
+    settings.setValue( "save/suffix", fileSuffix() );
+    settings.setValue( "save/overwrite", ( m_overwriteFiles->checkState() == Qt::Checked ) );
 
-    // Load from QSettings
+    settings.setValue( "general/size", size() );
+}
+
+void SqueezeWindow::readSettings()
+{
+    QSettings settings;
+    int x_percent = settings.value( "resize/x-percent", 50 ).toInt();
+    int y_percent = settings.value( "resize/y-percent", 50 ).toInt();
+    bool lockAspect = settings.value( "resize/aspect-lock", true ).toBool();
+
+    QString save = settings.value( "save/directory", QDir::toNativeSeparators( QDir::homePath() ) ).toString();
+    QString suffix = settings.value( "save/suffix", QString("") ).toString();
+    bool overwrite = settings.value( "save/overwrite", false ).toBool();
+
+    QSize size = settings.value( "general/size", QSize(750,500) ).toSize();
+
+    // set the aspect locking before the values
+    m_aspectLock->setCheckState( lockAspect ? Qt::Checked : Qt::Unchecked );
+    m_resizeX->setValue( x_percent );
+    m_resizeY->setValue( y_percent );
+
+    m_saveDirectory->setText( save );
+    m_fileSuffix->setText( suffix );
+    m_overwriteFiles->setCheckState( overwrite ? Qt::Checked : Qt::Unchecked );
+
+    resize( size );
 }
 
 void SqueezeWindow::createToolBar()
@@ -90,7 +121,6 @@ void SqueezeWindow::createToolBar()
     connect( m_resizeY, SIGNAL( valueChanged( double ) ), this, SLOT( resizeHeightChanged( double ) ) );
 
     m_aspectLock = new QCheckBox( tr( "&Lock Aspect Ratio" ) );
-    m_aspectLock->setCheckState( Qt::Checked );
 
     resizeLayout->addWidget( resizeXLabel, 1, 1 );
     resizeLayout->addWidget( m_resizeX, 1, 2 );
