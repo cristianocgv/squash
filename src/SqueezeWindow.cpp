@@ -189,6 +189,17 @@ void SqueezeWindow::createToolBar()
     addToolBar( m_toolBar );
 }
 
+void SqueezeWindow::keyPressEvent( QKeyEvent *event )
+{
+    if( event->key() == Qt::Key_Q && event->modifiers() & Qt::ControlModifier )
+    {
+        event->accept();
+        qApp->quit();
+        return;
+    }
+    QMainWindow::keyPressEvent( event );
+}
+
 void SqueezeWindow::setStatusBarText( const QString &text )
 {
     statusBar()->showMessage( text );

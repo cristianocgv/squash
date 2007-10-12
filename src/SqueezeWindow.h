@@ -49,6 +49,7 @@ class SqueezeWindow : public QMainWindow
 
     protected:
         void closeEvent( QCloseEvent *event );
+        void keyPressEvent( QKeyEvent *event );
 
     private:
         SqueezeWindow( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
