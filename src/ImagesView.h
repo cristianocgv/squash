@@ -21,6 +21,7 @@ class ImagesView : public QListView
     protected:
         void contextMenuEvent( QContextMenuEvent *event );
         void keyPressEvent( QKeyEvent *event );
+        void paintEvent( QPaintEvent *event );
 
     private slots:
         void removeSelectedImages();

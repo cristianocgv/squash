@@ -54,7 +54,7 @@ void ImagesView::contextMenuEvent( QContextMenuEvent *event )
         return;
 
     QMenu context( tr( "Actions" ), this );
-    QString text = tr( "Remove %n image(s)", "", indexes.size() );
+    const QString text = tr( "Remove %n image(s)", "", indexes.size() );
     context.addAction( text, this, SLOT( removeSelectedImages() ) );
 
     context.exec( event->globalPos() );
@@ -68,4 +68,34 @@ void ImagesView::keyPressEvent( QKeyEvent *event )
         return;
     }
     QListView::keyPressEvent( event );
+}
+
+void ImagesView::paintEvent( QPaintEvent *event )
+{
+    if( model()->rowCount() > 0 )
+    {
+        QListView::paintEvent( event );
+        return;
+    }
+
+    QPainter painter( viewport() );
+
+    QPalette palette;
+
+    QPen pen( palette.color( QPalette::Highlight ) );
+
+    QFont font = painter.font();
+    font.setBold( true );
+    font.setPointSize( font.pointSize() + 10 );
+
+    const QString text = tr( "Add some images to begin" );
+
+    const QFontMetrics fm( font );
+    if( fm.width( text ) > viewport()->rect().width() )
+        return;
+
+    painter.setPen( pen );
+    painter.setFont( font );
+
+    painter.drawText( rect(), Qt::AlignCenter, text );
 }
