@@ -98,7 +98,7 @@ void SqueezeWindow::createToolBar()
     /// ADD IMAGES ACTION
 
     m_addImages = m_toolBar->addAction( tr( "&Add Images" ), this, SLOT( addImages() ) );
-    m_addImages->setIcon( QIcon( ":/fileopen.png" ) );
+    m_addImages->setIcon( QIcon( ":/insert-image.png" ) );
 
     m_toolBar->addSeparator();
 
@@ -154,7 +154,7 @@ void SqueezeWindow::createToolBar()
 
     m_directoryChooser = new QPushButton( storeElement );
     m_directoryChooser->setIconSize( QSize( 16, 16 ) );
-    m_directoryChooser->setIcon( QIcon( ":/fileopen.png" ) );
+    m_directoryChooser->setIcon( QIcon( ":/document-open.png" ) );
     m_directoryChooser->setFlat( true );
     m_directoryChooser->setMaximumHeight( 22 );
     m_directoryChooser->setMaximumWidth( 22 );
@@ -184,7 +184,7 @@ void SqueezeWindow::createToolBar()
     m_toolBar->addSeparator();
 
     m_resizeImages = m_toolBar->addAction( tr( "&Resize Images" ), this, SLOT( resizeImages() ) );
-    m_resizeImages->setIcon( QIcon( ":/resize.png" ) );
+    m_resizeImages->setIcon( QIcon( ":/resize-image.png" ) );
 
     addToolBar( m_toolBar );
 }
