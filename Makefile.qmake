@@ -3,10 +3,19 @@ QT = core gui
 CONFIG -= app_bundle lib_bundle ppc
 #-------------------------------------------------------------------------------
 
-SOURCES = $$system( find src -name \*.cpp -not -name qrc_resources.cpp -print -o -name build -prune )
-HEADERS = $$system( find src -name \*.h -print -o -name build -prune)
-FORMS = $$system( find src -name \*.ui )
-RESOURCES = qrc/resources.qrc
+SOURCES      = src/ImageLoader.cpp \
+	       src/ImageResizer.cpp \
+	       src/ImagesModel.cpp \
+	       src/ImagesView.cpp \
+	       src/main.cpp \
+	       src/SqueezeWindow.cpp
+HEADERS      = src/ImageLoader.h \
+	       src/ImageResizer.h \
+	       src/ImagesModel.h \
+	       src/ImagesView.h \
+	       src/SqueezeWindow.h
+RESOURCES    = qrc/resources.qrc
+TRANSLATIONS = tr/squeeze_en.ts
 
 #-------------------------------------------------------------------------------
 
