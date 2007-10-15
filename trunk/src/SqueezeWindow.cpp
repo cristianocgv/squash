@@ -267,19 +267,25 @@ void SqueezeWindow::actionStatusSetter() // SLOT
     bool isResizing = m_imagesModel->isResizing();
     bool isAdding   = m_imagesModel->isAdding();
 
-    m_resizeImages->setEnabled( hasSaveDir && hasImages && !isResizing && !isAdding );
+    bool enableResize = !isResizing && !isAdding && hasSaveDir && hasImages;
+    bool enableAdd    = !isAdding && !isResizing;
+
+    bool enableSettings = !isResizing;
+
+    m_resizeImages->setEnabled( enableResize );
+    m_addImages->setEnabled( enableAdd  );
+
+    m_resizeX->setEnabled( enableSettings );
+    m_resizeY->setEnabled( enableSettings );
+    m_aspectLock->setEnabled( enableSettings );
+    m_saveDirectory->setEnabled( enableSettings );
+    m_fileSuffix->setEnabled( enableSettings );
+    m_overwriteFiles->setEnabled( enableSettings );
 }
 
 void SqueezeWindow::resetResizeImagesButton()
 {
     m_addImages->setEnabled( m_stopImageResize );
-    m_resizeX->setEnabled( m_stopImageResize );
-    m_resizeY->setEnabled( m_stopImageResize );
-    m_aspectLock->setEnabled( m_stopImageResize );
-    m_saveDirectory->setEnabled( m_stopImageResize );
-    m_fileSuffix->setEnabled( m_stopImageResize );
-    m_overwriteFiles->setEnabled( m_stopImageResize );
-
     m_resizeImages->setEnabled( true );
     m_stopImageResize = false;
 }
