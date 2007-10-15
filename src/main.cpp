@@ -28,6 +28,8 @@ int main( int argc, char *argv[] )
     QCoreApplication::setOrganizationDomain("sebruiz.net");
     QCoreApplication::setApplicationName("Squeeze");
 
+    app.setWindowIcon( QIcon( ":/squeeze.png" ) );
+
     SqueezeWindow::instance()->show();
 
     return app.exec();
