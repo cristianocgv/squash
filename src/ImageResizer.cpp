@@ -27,6 +27,7 @@ void ImageResizer::init()
 {
     QMutexLocker locker(&m_mutex);
 
+    m_failCount = 0;
     m_percentX      = SqueezeWindow::instance()->widthPercentage();
     m_percentY      = SqueezeWindow::instance()->heightPercentage();
     m_saveDirectory = QDir( SqueezeWindow::instance()->saveDirectory() );
@@ -41,10 +42,7 @@ void ImageResizer::load( QString filename )
     m_fileList.append( filename );
 
     if( !isRunning() )
-    {
-        m_failCount = 0;
         start( LowPriority );
-    }
     else
         m_condition.wakeOne();
 }
