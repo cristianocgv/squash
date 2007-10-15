@@ -61,6 +61,8 @@ class SqueezeWindow : public QMainWindow
         void readSettings();
         void writeSettings();
 
+        void enableSettings( const bool enable );
+
         ImagesModel *m_imagesModel;
         ImagesView  *m_imageView;
         QToolBar    *m_toolBar;
