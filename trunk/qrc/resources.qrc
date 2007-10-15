@@ -4,5 +4,6 @@
         <file>insert-image.png</file>
         <file>resize-image.png</file>
         <file>document-open.png</file>
+        <file>squeeze.png</file>
     </qresource>
 </RCC>
