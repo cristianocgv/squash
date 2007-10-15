@@ -43,6 +43,7 @@ class ImageResizer : public QThread
         QWaitCondition  m_condition;
 
         bool            m_abort;
+        uint            m_failCount;
 
         double          m_percentX;
         double          m_percentY;
