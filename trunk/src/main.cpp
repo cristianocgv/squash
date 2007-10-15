@@ -16,6 +16,14 @@ int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );
 
+    QTranslator qtTranslator;
+    qtTranslator.load( "qt_" + QLocale::system().name() );
+    app.installTranslator( &qtTranslator );
+
+    QTranslator squeezeTranslator;
+    squeezeTranslator.load( "tr/squeeze_" + QLocale::system().name() );
+    app.installTranslator( &squeezeTranslator );
+
     QCoreApplication::setOrganizationName("SebRuiz");
     QCoreApplication::setOrganizationDomain("sebruiz.net");
     QCoreApplication::setApplicationName("Squeeze");
