@@ -32,11 +32,6 @@ void ImageResizer::init()
     m_saveDirectory = QDir( SqueezeWindow::instance()->saveDirectory() );
     m_fileSuffix    = SqueezeWindow::instance()->fileSuffix();
     m_overwrite     = SqueezeWindow::instance()->overwrite();
-
-    qDebug() << "save dir:    " << m_saveDirectory.absolutePath();
-    qDebug() << "file suffix: " << m_fileSuffix;
-    qDebug() << "w: " << m_percentX;
-    qDebug() << "h: " << m_percentY;
 }
 
 void ImageResizer::load( QString filename )
@@ -46,7 +41,10 @@ void ImageResizer::load( QString filename )
     m_fileList.append( filename );
 
     if( !isRunning() )
+    {
+        m_failCount = 0;
         start( LowPriority );
+    }
     else
         m_condition.wakeOne();
 }
@@ -69,13 +67,13 @@ void ImageResizer::run()
     forever
     {
         m_mutex.lock();
-        if( m_fileList.isEmpty() && !m_abort )
+        if( m_fileList.size() == m_failCount && !m_abort )
             m_condition.wait( &m_mutex );
 
         if( m_abort )
             return;
 
-        QString filename = m_fileList.takeFirst();
+        QString filename = m_fileList.takeAt( m_failCount );
         m_mutex.unlock();
 
         if( !m_saveDirectory.exists() )
@@ -92,6 +90,10 @@ void ImageResizer::run()
             if( !m_overwrite )
             {
                 emit imageResizeFailed( filename );
+                m_mutex.lock();
+                ++m_failCount;
+                m_fileList.prepend( filename );
+                m_mutex.unlock();
                 continue;
             }
             else
@@ -100,6 +102,10 @@ void ImageResizer::run()
                 if( !removed )
                 {
                     emit imageResizeFailed( filename );
+                    m_mutex.lock();
+                    ++m_failCount;
+                    m_fileList.prepend( filename );
+                    m_mutex.unlock();
                     continue;
                 }
             }
