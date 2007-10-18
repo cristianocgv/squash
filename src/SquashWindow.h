@@ -13,6 +13,7 @@
 
 class ImagesView;
 class ImagesModel;
+class QSettings;
 
 class SquashWindow : public QMainWindow
 {
