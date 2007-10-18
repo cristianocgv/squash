@@ -39,9 +39,12 @@ release {
     mac* {
         QMAKE_CXXFLAGS_RELEASE = -O3 -g -fomit-frame-pointer
     }
-    win32 {
+    win32-msvc {
         QMAKE_CXXFLAGS_RELEASE = -Zi -Oy -Ox -GL -MD
         QMAKE_LFLAGS_RELEASE = /ltcg
+    }
+    win32-g++ {
+        QMAKE_CXXFLAGS_RELEASE = -O3 -freorder-blocks -fno-reorder-functions -fomit-frame-pointer -gstabs+
     }
     
 #    QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
