@@ -20,15 +20,15 @@ int main( int argc, char *argv[] )
     qtTranslator.load( "qt_" + QLocale::system().name() );
     app.installTranslator( &qtTranslator );
 
-    QTranslator squeezeTranslator;
-    squeezeTranslator.load( "tr/squeeze_" + QLocale::system().name() );
-    app.installTranslator( &squeezeTranslator );
+    QTranslator squashTranslator;
+    squashTranslator.load( "tr/squash_" + QLocale::system().name() );
+    app.installTranslator( &squashTranslator );
 
     QCoreApplication::setOrganizationName("SebRuiz");
     QCoreApplication::setOrganizationDomain("sebruiz.net");
     QCoreApplication::setApplicationName("Squash");
 
-    app.setWindowIcon( QIcon( ":/squeeze.png" ) );
+    app.setWindowIcon( QIcon( ":/squash.png" ) );
 
     SquashWindow::instance()->show();
 
