@@ -1,4 +1,4 @@
-TARGET = squeeze
+TARGET = squash
 QT = core gui
 CONFIG -= app_bundle lib_bundle ppc
 #-------------------------------------------------------------------------------
@@ -8,14 +8,14 @@ SOURCES      = src/ImageLoader.cpp \
 	       src/ImagesModel.cpp \
 	       src/ImagesView.cpp \
 	       src/main.cpp \
-	       src/SqueezeWindow.cpp
+	       src/SquashWindow.cpp
 HEADERS      = src/ImageLoader.h \
 	       src/ImageResizer.h \
 	       src/ImagesModel.h \
 	       src/ImagesView.h \
-	       src/SqueezeWindow.h
+	       src/SquashWindow.h
 RESOURCES    = qrc/resources.qrc
-TRANSLATIONS = tr/squeeze_en.ts
+TRANSLATIONS = tr/squash_en.ts
 
 #-------------------------------------------------------------------------------
 
