@@ -7,7 +7,7 @@
  ***************************************************************************/
 
 
-#include "SqueezeWindow.h"
+#include "SquashWindow.h"
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -26,11 +26,11 @@ int main( int argc, char *argv[] )
 
     QCoreApplication::setOrganizationName("SebRuiz");
     QCoreApplication::setOrganizationDomain("sebruiz.net");
-    QCoreApplication::setApplicationName("Squeeze");
+    QCoreApplication::setApplicationName("Squash");
 
     app.setWindowIcon( QIcon( ":/squeeze.png" ) );
 
-    SqueezeWindow::instance()->show();
+    SquashWindow::instance()->show();
 
     return app.exec();
 }

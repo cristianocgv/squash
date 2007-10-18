@@ -8,15 +8,15 @@
 
 #include "ImagesModel.h"
 #include "ImagesView.h"
-#include "SqueezeWindow.h"
+#include "SquashWindow.h"
 
 #include <QDebug>
 #include <QtGui>
 #include <QSettings>
 
-SqueezeWindow *SqueezeWindow::s_instance = 0;
+SquashWindow *SquashWindow::s_instance = 0;
 
-SqueezeWindow::SqueezeWindow( QWidget *parent, Qt::WindowFlags flags )
+SquashWindow::SquashWindow( QWidget *parent, Qt::WindowFlags flags )
     : QMainWindow( parent, flags )
     , m_stopImageAdd( false )
     , m_stopImageResize( false )
@@ -40,13 +40,13 @@ SqueezeWindow::SqueezeWindow( QWidget *parent, Qt::WindowFlags flags )
     actionStatusSetter();
 }
 
-void SqueezeWindow::closeEvent( QCloseEvent *event )
+void SquashWindow::closeEvent( QCloseEvent *event )
 {
     writeSettings();
     event->accept();
 }
 
-void SqueezeWindow::writeSettings()
+void SquashWindow::writeSettings()
 {
     QSettings settings( QDir::current().filePath( "squeeze.ini" ), QSettings::IniFormat );
     settings.setValue( "resize/x-percent", widthPercentage() );
@@ -60,7 +60,7 @@ void SqueezeWindow::writeSettings()
     settings.setValue( "general/size", size() );
 }
 
-void SqueezeWindow::readSettings()
+void SquashWindow::readSettings()
 {
     QSettings settings( QDir::current().filePath( "squeeze.ini" ), QSettings::IniFormat );
     int x_percent = settings.value( "resize/x-percent", 50 ).toInt();
@@ -85,7 +85,7 @@ void SqueezeWindow::readSettings()
     resize( size );
 }
 
-void SqueezeWindow::createToolBar()
+void SquashWindow::createToolBar()
 {
     m_toolBar = new QToolBar( this );
     m_toolBar->setMovable( false );
@@ -189,7 +189,7 @@ void SqueezeWindow::createToolBar()
     addToolBar( m_toolBar );
 }
 
-void SqueezeWindow::keyPressEvent( QKeyEvent *event )
+void SquashWindow::keyPressEvent( QKeyEvent *event )
 {
     if( event->key() == Qt::Key_Q && event->modifiers() & Qt::ControlModifier )
     {
@@ -200,12 +200,12 @@ void SqueezeWindow::keyPressEvent( QKeyEvent *event )
     QMainWindow::keyPressEvent( event );
 }
 
-void SqueezeWindow::setStatusBarText( const QString &text )
+void SquashWindow::setStatusBarText( const QString &text )
 {
     statusBar()->showMessage( text );
 }
 
-void SqueezeWindow::addImages() // SLOT
+void SquashWindow::addImages() // SLOT
 {
     if( m_stopImageAdd )
     {
@@ -231,13 +231,13 @@ void SqueezeWindow::addImages() // SLOT
     }
 }
 
-void SqueezeWindow::resetAddImagesButton()
+void SquashWindow::resetAddImagesButton()
 {
     m_addImages->setEnabled( true );
     m_stopImageAdd = false;
 }
 
-void SqueezeWindow::resizeImages() // SLOT
+void SquashWindow::resizeImages() // SLOT
 {
     enableSettings( m_stopImageResize );
 
@@ -254,7 +254,7 @@ void SqueezeWindow::resizeImages() // SLOT
     }
 }
 
-void SqueezeWindow::actionStatusSetter() // SLOT
+void SquashWindow::actionStatusSetter() // SLOT
 {
     bool hasSaveDir = !m_saveDirectory->text().isEmpty();
     bool hasImages  = m_imagesModel->imageCount() > 0;
@@ -270,7 +270,7 @@ void SqueezeWindow::actionStatusSetter() // SLOT
     enableSettings( !isResizing );
 }
 
-void SqueezeWindow::enableSettings( const bool enable )
+void SquashWindow::enableSettings( const bool enable )
 {
     m_resizeX->setEnabled( enable );
     m_resizeY->setEnabled( enable );
@@ -281,26 +281,26 @@ void SqueezeWindow::enableSettings( const bool enable )
     m_overwriteFiles->setEnabled( enable );
 }
 
-void SqueezeWindow::resetResizeImagesButton()
+void SquashWindow::resetResizeImagesButton()
 {
     m_addImages->setEnabled( m_stopImageResize );
     m_resizeImages->setEnabled( true );
     m_stopImageResize = false;
 }
 
-void SqueezeWindow::resizeWidthChanged( double width ) // SLOT
+void SquashWindow::resizeWidthChanged( double width ) // SLOT
 {
     if( m_aspectLock->checkState() == Qt::Checked )
         m_resizeY->setValue( width );
 }
 
-void SqueezeWindow::resizeHeightChanged( double height ) // SLOT
+void SquashWindow::resizeHeightChanged( double height ) // SLOT
 {
     if( m_aspectLock->checkState() == Qt::Checked )
         m_resizeX->setValue( height );
 }
 
-void SqueezeWindow::chooseSaveDirectory() // SLOT
+void SquashWindow::chooseSaveDirectory() // SLOT
 {
     QFileDialog dialog( this, tr("Select Save Directory") );
     dialog.setAcceptMode( QFileDialog::AcceptOpen );
