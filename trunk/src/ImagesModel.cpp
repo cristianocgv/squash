@@ -153,7 +153,7 @@ void ImagesModel::imageResized( const QString &filename )
     QString text = tr( "Resizing %n image(s)...", "", m_filenames.size() );
     if( m_filenames.size() <= 0 )
     {
-        SquashWindow::instance()->resetAddImagesButton();
+        SquashWindow::instance()->resetResizeImagesButton();
         text = tr( "%n image(s) resized", "", m_resizeCount );
         m_resizeCount = 0;
     }

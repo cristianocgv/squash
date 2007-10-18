@@ -26,7 +26,6 @@ ImageResizer::~ImageResizer()
 void ImageResizer::init()
 {
     QMutexLocker locker(&m_mutex);
-
     m_failCount = 0;
     m_percentX      = SquashWindow::instance()->widthPercentage();
     m_percentY      = SquashWindow::instance()->heightPercentage();
@@ -87,6 +86,7 @@ void ImageResizer::run()
         {
             if( !m_overwrite )
             {
+                qDebug() << "Image write failed (would not overwrite)";
                 emit imageResizeFailed( filename );
                 m_mutex.lock();
                 ++m_failCount;
@@ -99,6 +99,7 @@ void ImageResizer::run()
                 bool removed = scaledFile.remove();
                 if( !removed )
                 {
+                    qDebug() << "Image write failed (could not remove)";
                     emit imageResizeFailed( filename );
                     m_mutex.lock();
                     ++m_failCount;
