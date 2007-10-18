@@ -10,7 +10,7 @@
 #include <QtGui>
 #include <QDebug>
 
-#include "SqueezeWindow.h"
+#include "SquashWindow.h"
 #include "ImagesModel.h"
 #include "ImageLoader.h"
 
@@ -94,7 +94,7 @@ void ImagesModel::addImage( const QString filename )
 void ImagesModel::addImages( const QStringList list )
 {
     m_loadCount += list.size();
-    SqueezeWindow::instance()->setStatusBarText( tr( "Loading %n image(s)...", "", m_loadCount ) );
+    SquashWindow::instance()->setStatusBarText( tr( "Loading %n image(s)...", "", m_loadCount ) );
 
     foreach( QString location, list )
         addImage( location );
@@ -119,10 +119,10 @@ void ImagesModel::imageLoaded( const QString &filename, const QImage &thumbnail,
     QString text = tr( "Loading %n image(s)...", "", m_loadCount );
     if( m_loadCount <= 0 )
     {
-        SqueezeWindow::instance()->resetAddImagesButton();
+        SquashWindow::instance()->resetAddImagesButton();
         text = tr( "%n image(s) loaded", "", m_filenames.size() );
     }
-    SqueezeWindow::instance()->setStatusBarText( text );
+    SquashWindow::instance()->setStatusBarText( text );
 
     emit imageAdded();
 }
@@ -130,13 +130,13 @@ void ImagesModel::imageLoaded( const QString &filename, const QImage &thumbnail,
 void ImagesModel::stopAddImages()
 {
     m_imageLoader.cancel();
-    SqueezeWindow::instance()->setStatusBarText( tr( "%n image(s) loaded", "", m_filenames.size() ) );
+    SquashWindow::instance()->setStatusBarText( tr( "%n image(s) loaded", "", m_filenames.size() ) );
 }
 
 void ImagesModel::resizeImages()
 {
     m_resizeCount = 0;
-    SqueezeWindow::instance()->setStatusBarText( tr( "Resizing %n image(s)...", "", m_resizeCount ) );
+    SquashWindow::instance()->setStatusBarText( tr( "Resizing %n image(s)...", "", m_resizeCount ) );
     m_imageResizer.init();
     foreach( QString file, m_filenames )
         m_imageResizer.load( file );
@@ -153,15 +153,15 @@ void ImagesModel::imageResized( const QString &filename )
     QString text = tr( "Resizing %n image(s)...", "", m_filenames.size() );
     if( m_filenames.size() <= 0 )
     {
-        SqueezeWindow::instance()->resetAddImagesButton();
+        SquashWindow::instance()->resetAddImagesButton();
         text = tr( "%n image(s) resized", "", m_resizeCount );
         m_resizeCount = 0;
     }
-    SqueezeWindow::instance()->setStatusBarText( text );
+    SquashWindow::instance()->setStatusBarText( text );
 }
 
 void ImagesModel::stopResizeImages()
 {
     m_imageResizer.cancel();
-    SqueezeWindow::instance()->setStatusBarText( tr( "%n image(s) loaded", "", m_resizeCount ) );
+    SquashWindow::instance()->setStatusBarText( tr( "%n image(s) loaded", "", m_resizeCount ) );
 }

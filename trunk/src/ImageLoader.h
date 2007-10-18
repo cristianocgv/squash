@@ -6,8 +6,8 @@
  *   as published by the Free Software Foundation.                         *
  ***************************************************************************/
 
-#ifndef SQUEEZE_IMAGELOADER
-#define SQUEEZE_IMAGELOADER
+#ifndef SQUASH_IMAGELOADER
+#define SQUASH_IMAGELOADER
 
 #include <QMutex>
 #include <QSize>

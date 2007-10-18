@@ -6,24 +6,24 @@
  *   as published by the Free Software Foundation.                         *
  ***************************************************************************/
 
-#ifndef SQUEEZE_MAINWINDOW
-#define SQUEEZE_MAINWINDOW
+#ifndef SQUASH_MAINWINDOW
+#define SQUASH_MAINWINDOW
 
 #include <QtGui>
 
 class ImagesView;
 class ImagesModel;
 
-class SqueezeWindow : public QMainWindow
+class SquashWindow : public QMainWindow
 {
     Q_OBJECT
 
     public:
-       ~SqueezeWindow() { }
-       static SqueezeWindow *instance()
+       ~SquashWindow() { }
+       static SquashWindow *instance()
        {
            if( !s_instance )
-               s_instance = new SqueezeWindow();
+               s_instance = new SquashWindow();
            return s_instance;
        }
 
@@ -52,9 +52,9 @@ class SqueezeWindow : public QMainWindow
         void keyPressEvent( QKeyEvent *event );
 
     private:
-        SqueezeWindow( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
+        SquashWindow( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
 
-        static SqueezeWindow *s_instance;
+        static SquashWindow *s_instance;
 
         void createToolBar();
 

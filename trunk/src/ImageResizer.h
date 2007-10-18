@@ -6,8 +6,8 @@
  *   as published by the Free Software Foundation.                         *
  ***************************************************************************/
 
-#ifndef SQUEEZE_IMAGERESIZER
-#define SQUEEZE_IMAGERESIZER
+#ifndef SQUASH_IMAGERESIZER
+#define SQUASH_IMAGERESIZER
 
 #include <QDir>
 #include <QMutex>

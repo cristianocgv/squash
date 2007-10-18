@@ -7,8 +7,8 @@
  *   as published by the Free Software Foundation.                         *
  ***************************************************************************/
 
-#ifndef SQUEEZE_IMAGESMODEL
-#define SQUEEZE_IMAGESMODEL
+#ifndef SQUASH_IMAGESMODEL
+#define SQUASH_IMAGESMODEL
 
 #include "ImageLoader.h"
 #include "ImageResizer.h"

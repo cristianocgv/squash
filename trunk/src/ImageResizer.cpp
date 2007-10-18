@@ -10,7 +10,7 @@
 #include <QDebug>
 
 #include "ImageResizer.h"
-#include "SqueezeWindow.h"
+#include "SquashWindow.h"
 
 ImageResizer::ImageResizer( QObject *parent )
     : QThread( parent )
@@ -28,11 +28,11 @@ void ImageResizer::init()
     QMutexLocker locker(&m_mutex);
 
     m_failCount = 0;
-    m_percentX      = SqueezeWindow::instance()->widthPercentage();
-    m_percentY      = SqueezeWindow::instance()->heightPercentage();
-    m_saveDirectory = QDir( SqueezeWindow::instance()->saveDirectory() );
-    m_fileSuffix    = SqueezeWindow::instance()->fileSuffix();
-    m_overwrite     = SqueezeWindow::instance()->overwrite();
+    m_percentX      = SquashWindow::instance()->widthPercentage();
+    m_percentY      = SquashWindow::instance()->heightPercentage();
+    m_saveDirectory = QDir( SquashWindow::instance()->saveDirectory() );
+    m_fileSuffix    = SquashWindow::instance()->fileSuffix();
+    m_overwrite     = SquashWindow::instance()->overwrite();
 }
 
 void ImageResizer::load( QString filename )

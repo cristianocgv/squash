@@ -6,8 +6,8 @@
  *   as published by the Free Software Foundation.                         *
  ***************************************************************************/
 
-#ifndef SQUEEZE_IMAGESVIEW
-#define SQUEEZE_IMAGESVIEW
+#ifndef SQUASH_IMAGESVIEW
+#define SQUASH_IMAGESVIEW
 
 #include <QtGui>
 
