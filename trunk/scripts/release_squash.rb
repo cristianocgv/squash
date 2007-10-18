@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Ruby script for generating Squeeze tarball releases
+# Ruby script for generating Squash tarball releases
 #
 # Based on the work by:
 # (c) 2005 Mark Kretschmann <markey@web.de>
@@ -8,9 +8,9 @@
 # License: GNU General Public License V2
 
 
-version  = `kdialog --inputbox "Enter Squeeze version: "`.chomp()
+version  = `kdialog --inputbox "Enter Squash version: "`.chomp()
 
-name     = "squeeze"
+name     = "squash"
 folder   = "#{name}-#{version}"
 
 # Remove old folder, if exists
@@ -20,15 +20,15 @@ folder   = "#{name}-#{version}"
 Dir.mkdir( folder )
 Dir.chdir( folder )
 
-`svn co http://squeeze.googlecode.com/svn/trunk/ squeeze`
+`svn co http://squash.googlecode.com/svn/trunk/ squash`
 
 puts "\n"
 
 
 # Remove SVN data folder
 `find -name ".svn" | xargs rm -rf`
-`mv squeeze/* .`
-`rmdir squeeze`
+`mv squash/* .`
+`rmdir squash`
 `rm -rf qrc/svg 2> /dev/null`
 
 # This stuff doesn't belong in the tarball
@@ -44,7 +44,7 @@ puts "done.\n"
 
 puts "\n"
 puts "========================================================"
-puts "Congratulations :) Squeeze #{version} tarball generated.\n"
+puts "Congratulations :) Squash #{version} tarball generated.\n"
 puts "\n"
 puts "MD5 checksum: " + `md5sum #{folder}.tar.bz2`
 puts "\n"
