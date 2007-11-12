@@ -62,6 +62,12 @@ void ImageLoader::run()
             return;
 
         QImage image( filename );
+        if( image.isNull() )
+        {
+            qDebug() << "Image " << filename << " failed to load";
+            continue;
+        }
+
         QImage scaled = image.scaled( 150, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation );
 
         QStringList suffixes; suffixes << "B" << "KB" << "MB" << "GB";

@@ -16,14 +16,14 @@
 ImagesView::ImagesView( QWidget *parent )
     : QListView( parent )
 {
-    setViewMode( QListView::IconMode );
+    setGridSize( QSize(170, 170) );
+    setIconSize( QSize(150, 150) );
     setMovement( QListView::Static );
     setResizeMode( QListView::Adjust );
-    setWrapping( true );
-    setIconSize( QSize(150, 150) );
-    setGridSize( QSize(170, 170) );
-    setSpacing( 10 );
     setSelectionMode( QAbstractItemView::ExtendedSelection );
+    setSpacing( 10 );
+    setViewMode( QListView::IconMode );
+    setWrapping( true );
 }
 
 void ImagesView::removeSelectedImages()
