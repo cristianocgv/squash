@@ -61,6 +61,7 @@ class SquashWindow : public QMainWindow
 
         void createToolBar();
 
+        QString getSettingsPath();
         void readSettings();
         void writeSettings();
 
