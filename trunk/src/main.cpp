@@ -12,6 +12,8 @@
 #include <QApplication>
 #include <QCoreApplication>
 
+Q_IMPORT_PLUGIN(qjpeg)
+
 int main( int argc, char *argv[] )
 {
     QApplication app( argc, argv );

@@ -1,19 +1,20 @@
 TARGET = squash
 QT = core gui
 CONFIG -= app_bundle lib_bundle ppc
+
 #-------------------------------------------------------------------------------
 
-SOURCES      = src/ImageLoader.cpp \
-	       src/ImageResizer.cpp \
-	       src/ImagesModel.cpp \
-	       src/ImagesView.cpp \
-	       src/main.cpp \
-	       src/SquashWindow.cpp
-HEADERS      = src/ImageLoader.h \
-	       src/ImageResizer.h \
-	       src/ImagesModel.h \
-	       src/ImagesView.h \
-	       src/SquashWindow.h
+SOURCES  = src/ImageLoader.cpp \
+           src/ImageResizer.cpp \
+           src/ImagesModel.cpp \
+           src/ImagesView.cpp \
+           src/main.cpp \
+           src/SquashWindow.cpp
+HEADERS  = src/ImageLoader.h \
+           src/ImageResizer.h \
+           src/ImagesModel.h \
+           src/ImagesView.h \
+           src/SquashWindow.h
 RESOURCES    = qrc/resources.qrc
 TRANSLATIONS = tr/squash_en.ts
 
@@ -28,7 +29,7 @@ UI_DIR = build
 #-------------------------------------------------------------------------------
 
 debug {
-	QMAKE_CXXFLAGS_DEBUG = -ggdb
+    QMAKE_CXXFLAGS_DEBUG = -ggdb
 }
 #-------------------------------------------------------------------------------
 
@@ -45,9 +46,14 @@ release {
     }
     win32-g++ {
         QMAKE_CXXFLAGS_RELEASE = -O3 -freorder-blocks -fno-reorder-functions -fomit-frame-pointer -gstabs+
+        QMAKE_LFLAGS = -static -enable-stdcall-fixup -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc
+        QTPLUGIN += qjpeg
+        LIBS += -L . -lqjpeg
+        CONFIG += release
+        RC_FILE = qrc/squash.rc
     }
     
 #    QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
-	CONFIG += warn_off
+    CONFIG += warn_off
 }
 #-------------------------------------------------------------------------------
