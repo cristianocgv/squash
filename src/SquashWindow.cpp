@@ -35,6 +35,7 @@ SquashWindow::SquashWindow( QWidget *parent, Qt::WindowFlags flags )
 
     readSettings();
 
+    setAcceptDrops( true );
     setCentralWidget( m_imageView );
 
     actionStatusSetter();
@@ -200,6 +201,47 @@ void SquashWindow::keyPressEvent( QKeyEvent *event )
     QMainWindow::keyPressEvent( event );
 }
 
+void SquashWindow::dragEnterEvent( QDragEnterEvent *event )
+{
+    qDebug() << "drag enter event: " << event->mimeData()->formats() << " has Image? " << event->mimeData()->hasImage();
+    if( validUrls( event->mimeData()->urls() ) )
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void SquashWindow::dropEvent( QDropEvent *event )
+{
+    const QMimeData *mimeData = event->mimeData();
+    QStringList images;
+
+    if( mimeData->hasUrls() )
+    {
+        QList<QUrl> urlList = mimeData->urls();
+        foreach( QUrl url, urlList )
+        {
+            if( !url.isValid() )
+                continue;
+            images.append( url.toLocalFile() );
+        }
+    }
+
+    setBackgroundRole(QPalette::Dark);
+    event->acceptProposedAction();
+
+    addImages( images );
+}
+
+bool SquashWindow::validUrls( QList<QUrl> list )
+{
+    foreach( QUrl url, list )
+    {
+        if( url.isValid() )
+            return true;
+    }
+    return false;
+}
+
 void SquashWindow::setStatusBarText( const QString &text )
 {
     statusBar()->showMessage( text );
@@ -225,10 +267,15 @@ void SquashWindow::addImages() // SLOT
 
     if( !images.isEmpty() )
     {
-        m_stopImageAdd = true;
-        m_addImages->setEnabled( false );
-        m_imagesModel->addImages( images );
+        addImages( images );
     }
+}
+
+void SquashWindow::addImages( QStringList images )
+{
+    m_stopImageAdd = true;
+    m_addImages->setEnabled( false );
+    m_imagesModel->addImages( images );
 }
 
 void SquashWindow::resetAddImagesButton()

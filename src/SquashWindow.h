@@ -50,6 +50,8 @@ class SquashWindow : public QMainWindow
 
     protected:
         void closeEvent( QCloseEvent *event );
+        void dragEnterEvent( QDragEnterEvent *event );
+        void dropEvent( QDropEvent *event );
         void keyPressEvent( QKeyEvent *event );
 
     private:
@@ -63,6 +65,9 @@ class SquashWindow : public QMainWindow
         void writeSettings();
 
         void enableSettings( const bool enable );
+
+        void addImages( QStringList images );
+        bool validUrls( QList<QUrl> list );
 
         ImagesModel *m_imagesModel;
         ImagesView  *m_imageView;
