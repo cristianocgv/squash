@@ -12,7 +12,9 @@
 #include <QApplication>
 #include <QCoreApplication>
 
+#ifdef Q_WS_WIN
 Q_IMPORT_PLUGIN(qjpeg)
+#endif
 
 int main( int argc, char *argv[] )
 {
