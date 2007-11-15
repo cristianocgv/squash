@@ -34,6 +34,12 @@ void ImageLoader::load( QString filename )
         m_condition.wakeOne();
 }
 
+void ImageLoader::init()
+{
+    QMutexLocker locker(&m_mutex);
+    m_failCount = 0;
+}
+
 void ImageLoader::cancel()
 {
     m_mutex.lock();
@@ -52,7 +58,7 @@ void ImageLoader::run()
     forever
     {
         m_mutex.lock();
-        if( m_fileList.isEmpty() )
+        if( m_fileList.size() == m_failCount && !m_abort )
             m_condition.wait( &m_mutex );
 
         QString filename = m_fileList.takeFirst();
@@ -65,6 +71,11 @@ void ImageLoader::run()
         if( image.isNull() )
         {
             qDebug() << "Image " << filename << " failed to load";
+            m_mutex.lock();
+            ++m_failCount;
+            m_fileList.prepend( filename );
+            m_mutex.unlock();
+            emit imageLoadFailed( filename );
             continue;
         }
 

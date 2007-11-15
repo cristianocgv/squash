@@ -26,11 +26,13 @@ class ImageLoader : public QThread
         ImageLoader( QObject *parent = 0 );
        ~ImageLoader();
 
+        void init();
         void load( QString filename );
         void cancel();
 
     signals:
         void imageLoaded( const QString &filename, const QImage &thumbnail, const QString &description );
+        void imageLoadFailed( const QString &filename );
 
     protected:
         void run();
@@ -40,6 +42,7 @@ class ImageLoader : public QThread
         QWaitCondition  m_condition;
 
         bool            m_abort;
+        int             m_failCount;
 
         QStringList     m_fileList;
 };

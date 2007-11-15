@@ -23,6 +23,9 @@ ImagesModel::ImagesModel(QObject *parent)
               this,             SLOT( imageLoaded( const QString &, const QImage &, const QString & ) ) );
     connect( &m_imageResizer, SIGNAL( imageResized( const QString & ) ),
               this,             SLOT( imageResized( const QString & ) ) );
+
+    connect( &m_imageLoader,  SIGNAL( imageLoadFailed( const QString & ) ),
+              this,             SLOT( imageLoadFailed( const QString & ) ) );
 }
 
 QVariant ImagesModel::data( const QModelIndex &index, int role ) const
@@ -95,6 +98,7 @@ void ImagesModel::addImages( const QStringList list )
 {
     m_loadCount += list.size();
     SquashWindow::instance()->setStatusBarText( tr( "Loading %n image(s)...", "", m_loadCount ) );
+    m_imageLoader.init();
 
     foreach( QString location, list )
         addImage( location );
@@ -116,6 +120,20 @@ void ImagesModel::imageLoaded( const QString &filename, const QImage &thumbnail,
     endInsertRows();
 
     m_loadCount--;
+    updateLoadStatus();
+
+    emit imageAdded();
+}
+
+void ImagesModel::imageLoadFailed( const QString &filename )
+{
+    Q_UNUSED( filename );
+    m_loadCount--;
+    updateLoadStatus();
+}
+
+void ImagesModel::updateLoadStatus()
+{
     QString text = tr( "Loading %n image(s)...", "", m_loadCount );
     if( m_loadCount <= 0 )
     {
@@ -123,8 +141,6 @@ void ImagesModel::imageLoaded( const QString &filename, const QImage &thumbnail,
         text = tr( "%n image(s) loaded", "", m_filenames.size() );
     }
     SquashWindow::instance()->setStatusBarText( text );
-
-    emit imageAdded();
 }
 
 void ImagesModel::stopAddImages()

@@ -47,6 +47,7 @@ class ImagesModel : public QAbstractListModel
 
     private slots:
         void          imageLoaded( const QString &filename, const QImage &thumbnail, const QString &description );
+        void          imageLoadFailed( const QString &filename );
         void          imageResized( const QString &filename );
 
     signals:
@@ -56,6 +57,8 @@ class ImagesModel : public QAbstractListModel
         void          imageResizeFinished();
 
     private:
+        void          updateLoadStatus();
+
         QStringList   m_filenames;
         QList<QIcon>  m_thumbnails;
         QStringList   m_descriptions;
