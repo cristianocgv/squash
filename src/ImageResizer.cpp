@@ -87,11 +87,11 @@ void ImageResizer::run()
             if( !m_overwrite )
             {
                 qDebug() << "Image write failed (would not overwrite)";
-                emit imageResizeFailed( filename );
                 m_mutex.lock();
                 ++m_failCount;
                 m_fileList.prepend( filename );
                 m_mutex.unlock();
+                emit imageResizeFailed( filename );
                 continue;
             }
             else
@@ -100,11 +100,11 @@ void ImageResizer::run()
                 if( !removed )
                 {
                     qDebug() << "Image write failed (could not remove)";
-                    emit imageResizeFailed( filename );
                     m_mutex.lock();
                     ++m_failCount;
                     m_fileList.prepend( filename );
                     m_mutex.unlock();
+                    emit imageResizeFailed( filename );
                     continue;
                 }
             }
