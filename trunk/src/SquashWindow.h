@@ -78,6 +78,7 @@ class SquashWindow : public QMainWindow
 
         QAction   *m_addImages;
         bool       m_stopImageAdd;
+        QByteArray m_dialogSettings;
 
         /// SIZE SETTINGS
 
