@@ -80,6 +80,8 @@ void SquashWindow::writeSettings()
     settings.setValue( "save/suffix", fileSuffix() );
     settings.setValue( "save/overwrite", ( m_overwriteFiles->checkState() == Qt::Checked ) );
 
+    settings.setValue( "filechooser/dialog", m_dialogSettings );
+
     settings.setValue( "general/size", size() );
 }
 
@@ -101,6 +103,8 @@ void SquashWindow::readSettings()
     bool overwrite = settings.value( "save/overwrite", false ).toBool();
 
     QSize size = settings.value( "general/size", QSize(750,500) ).toSize();
+
+    m_dialogSettings = settings.value( "filechooser/dialog", QByteArray() ).toByteArray();
 
     // set the aspect locking before the values
     m_aspectLock->setCheckState( lockAspect ? Qt::Checked : Qt::Unchecked );
@@ -285,13 +289,17 @@ void SquashWindow::addImages() // SLOT
     }
 
     QFileDialog dialog( this, tr("Select Images") );
+    dialog.restoreState( m_dialogSettings );
     dialog.setFilter( tr("Images (*.png *.jpg *.jpeg *.bmp)") );
     dialog.setAcceptMode( QFileDialog::AcceptOpen );
     dialog.setFileMode( QFileDialog::ExistingFiles );
 
     QStringList images;
     if( dialog.exec() )
+    {
         images = dialog.selectedFiles();
+        m_dialogSettings = dialog.saveState();
+    }
 
     if( !images.isEmpty() )
     {
