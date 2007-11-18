@@ -4,6 +4,7 @@
         <file>insert-image.png</file>
         <file>resize-image.png</file>
         <file>document-open.png</file>
+        <file>aspect-lock.png</file>
         <file>squash.png</file>
     </qresource>
 </RCC>
