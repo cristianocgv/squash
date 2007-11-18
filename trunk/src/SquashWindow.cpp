@@ -74,11 +74,11 @@ void SquashWindow::writeSettings()
 
     settings.setValue( "resize/x-percent", widthPercentage() );
     settings.setValue( "resize/y-percent", heightPercentage() );
-    settings.setValue( "resize/aspect-lock", ( m_aspectLock->checkState() == Qt::Checked ) );
+    settings.setValue( "resize/aspect-lock", ( m_aspectLock->isChecked() ) );
 
     settings.setValue( "save/directory", saveDirectory() );
     settings.setValue( "save/suffix", fileSuffix() );
-    settings.setValue( "save/overwrite", ( m_overwriteFiles->checkState() == Qt::Checked ) );
+    settings.setValue( "save/overwrite", ( m_overwriteFiles->isChecked() ) );
 
     settings.setValue( "filechooser/dialog", m_dialogSettings );
 
@@ -107,7 +107,7 @@ void SquashWindow::readSettings()
     m_dialogSettings = settings.value( "filechooser/dialog", QByteArray() ).toByteArray();
 
     // set the aspect locking before the values
-    m_aspectLock->setCheckState( lockAspect ? Qt::Checked : Qt::Unchecked );
+    m_aspectLock->setChecked( lockAspect );
     m_resizeX->setValue( x_percent );
     m_resizeY->setValue( y_percent );
 
@@ -140,12 +140,21 @@ void SquashWindow::createToolBar()
     QWidget     *resizeElement = new QWidget();
     QGridLayout *resizeLayout  = new QGridLayout;
 
-    QLabel *resizeXLabel = new QLabel( tr( "Width" ) );
+    m_resizeCombo = new QComboBox();
+    m_resizeCombo->addItem( tr( "Percent" ), QVariant( PERCENT ) );
+    m_resizeCombo->addItem( tr( "Pixels" ), QVariant( PIXEL ) );
+    m_resizeCombo->addItem( tr( "Set height" ), QVariant( HEIGHT ) );
+    m_resizeCombo->addItem( tr( "Set width" ), QVariant( WIDTH ) );
+    m_resizeCombo->addItem( tr( "Set maximum side length" ), QVariant( MAX ) );
+
+    connect( m_resizeCombo, SIGNAL( activated( int ) ), this, SLOT( resizeMethodChanged( int ) ) );
+
+    m_resizeXLabel = new QLabel( tr( "Width" ) );
     m_resizeX = new QDoubleSpinBox;
     m_resizeX->setMaximum( 10000 );
     m_resizeX->setSuffix( tr( "%" ) );
 
-    QLabel *resizeYLabel = new QLabel( tr( "Height" ) );
+    m_resizeYLabel = new QLabel( tr( "Height" ) );
     m_resizeY = new QDoubleSpinBox;
     m_resizeY->setMaximum( 10000 );
     m_resizeY->setSuffix( tr( "%" ) );
@@ -153,13 +162,16 @@ void SquashWindow::createToolBar()
     connect( m_resizeX, SIGNAL( valueChanged( double ) ), this, SLOT( resizeWidthChanged( double )  ) );
     connect( m_resizeY, SIGNAL( valueChanged( double ) ), this, SLOT( resizeHeightChanged( double ) ) );
 
-    m_aspectLock = new QCheckBox( tr( "&Lock Aspect Ratio" ) );
+    m_aspectLock = new QPushButton( QIcon( ":/aspect-lock.png" ), QString() );
+    m_aspectLock->setCheckable( true );
+    m_aspectLock->setToolTip( tr( "Lock Aspect Ratio" ) );
 
-    resizeLayout->addWidget( resizeXLabel, 1, 1 );
-    resizeLayout->addWidget( m_resizeX, 1, 2 );
-    resizeLayout->addWidget( resizeYLabel, 2, 1 );
-    resizeLayout->addWidget( m_resizeY, 2, 2 );
-    resizeLayout->addWidget( m_aspectLock, 3, 1, 1, 2 );
+    resizeLayout->addWidget( m_resizeCombo, 1, 1, 1, 3 );
+    resizeLayout->addWidget( m_resizeXLabel, 2, 1 );
+    resizeLayout->addWidget( m_resizeX, 2, 2 );
+    resizeLayout->addWidget( m_resizeYLabel, 3, 1 );
+    resizeLayout->addWidget( m_resizeY, 3, 2 );
+    resizeLayout->addWidget( m_aspectLock, 2, 3, 2, 1 );
 
     resizeElement->setLayout( resizeLayout );
 
@@ -258,7 +270,6 @@ void SquashWindow::dropEvent( QDropEvent *event )
         }
     }
 
-    setBackgroundRole(QPalette::Dark);
     event->acceptProposedAction();
 
     addImages( images );
@@ -371,15 +382,60 @@ void SquashWindow::resetResizeImagesButton()
     m_stopImageResize = false;
 }
 
+void SquashWindow::resizeMethodChanged( int index )
+{
+    QVariant data = m_resizeCombo->itemData( index );
+    if( !data.isValid() )
+        return;
+
+    switch( data.toInt() )
+    {
+        case WIDTH:
+            m_resizeXLabel->setEnabled( true );
+            m_resizeX->setEnabled( true );
+            m_resizeYLabel->setEnabled( false );
+            m_resizeY->setEnabled( false );
+            m_aspectLock->setEnabled( false );
+            break;
+
+        case HEIGHT:
+            m_resizeXLabel->setEnabled( false );
+            m_resizeX->setEnabled( false );
+            m_resizeYLabel->setEnabled( true );
+            m_resizeY->setEnabled( true );
+            m_aspectLock->setEnabled( false );
+            break;
+
+        case MAX:
+            m_aspectLock->setEnabled( false );
+            break;
+
+        case PIXEL:
+            m_aspectLock->setEnabled( true );
+            //fall through
+
+        case PERCENT:
+            //fall through
+
+        default:
+            m_resizeXLabel->setEnabled( true );
+            m_resizeX->setEnabled( true );
+            m_resizeYLabel->setEnabled( true );
+            m_resizeY->setEnabled( true );
+            m_aspectLock->setEnabled( true );
+            break;
+    }
+}
+
 void SquashWindow::resizeWidthChanged( double width ) // SLOT
 {
-    if( m_aspectLock->checkState() == Qt::Checked )
+    if( m_aspectLock->isChecked() )
         m_resizeY->setValue( width );
 }
 
 void SquashWindow::resizeHeightChanged( double height ) // SLOT
 {
-    if( m_aspectLock->checkState() == Qt::Checked )
+    if( m_aspectLock->isChecked() )
         m_resizeX->setValue( height );
 }
 

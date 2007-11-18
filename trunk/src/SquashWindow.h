@@ -38,21 +38,22 @@ class SquashWindow : public QMainWindow
        QString fileSuffix()       const { return m_fileSuffix->text(); }
        bool    overwrite()        const { return m_overwriteFiles->checkState() == Qt::Checked; }
 
+    protected:
+        virtual void closeEvent( QCloseEvent *event );
+        virtual void dragEnterEvent( QDragEnterEvent *event );
+        virtual void dropEvent( QDropEvent *event );
+        virtual void keyPressEvent( QKeyEvent *event );
+
     private slots:
         void addImages();
         void resizeImages();
+        void resizeMethodChanged( int index );
         void resizeWidthChanged( double width );
         void resizeHeightChanged( double height );
 
         void actionStatusSetter();
 
         void chooseSaveDirectory();
-
-    protected:
-        void closeEvent( QCloseEvent *event );
-        void dragEnterEvent( QDragEnterEvent *event );
-        void dropEvent( QDropEvent *event );
-        void keyPressEvent( QKeyEvent *event );
 
     private:
         SquashWindow( QWidget *parent = 0, Qt::WindowFlags flags = 0 );
@@ -82,9 +83,21 @@ class SquashWindow : public QMainWindow
 
         /// SIZE SETTINGS
 
+        enum ResizeScale
+        {
+            PERCENT,
+            PIXEL,
+            WIDTH,
+            HEIGHT,
+            MAX
+        };
+
+        QComboBox      *m_resizeCombo;
         QDoubleSpinBox *m_resizeX; // new width of images
         QDoubleSpinBox *m_resizeY; // new height of images
-        QCheckBox      *m_aspectLock; // lock the aspect ratio
+        QLabel         *m_resizeXLabel;
+        QLabel         *m_resizeYLabel;
+        QPushButton    *m_aspectLock; // lock the aspect ratio
 
         /// STORE SETTINGS
 
