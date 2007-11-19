@@ -390,40 +390,71 @@ void SquashWindow::resizeMethodChanged( int index )
 
     switch( data.toInt() )
     {
+        case MAX:
+            modifyResizeMethods( true, false, true );
+            m_resizeXLabel->setText( tr( "Side length" ) );
+            m_resizeY->hide();
+            m_resizeYLabel->hide();
+            m_aspectLock->hide();
+            break;
+
         case WIDTH:
-            m_resizeXLabel->setEnabled( true );
-            m_resizeX->setEnabled( true );
-            m_resizeYLabel->setEnabled( false );
-            m_resizeY->setEnabled( false );
-            m_aspectLock->setEnabled( false );
+            modifyResizeMethods( true, false, true );
             break;
 
         case HEIGHT:
-            m_resizeXLabel->setEnabled( false );
-            m_resizeX->setEnabled( false );
-            m_resizeYLabel->setEnabled( true );
-            m_resizeY->setEnabled( true );
-            m_aspectLock->setEnabled( false );
-            break;
-
-        case MAX:
-            m_aspectLock->setEnabled( false );
+            modifyResizeMethods( false, true, true );
             break;
 
         case PIXEL:
-            m_aspectLock->setEnabled( true );
-            //fall through
-
-        case PERCENT:
-            //fall through
-
-        default:
-            m_resizeXLabel->setEnabled( true );
-            m_resizeX->setEnabled( true );
-            m_resizeYLabel->setEnabled( true );
-            m_resizeY->setEnabled( true );
-            m_aspectLock->setEnabled( true );
+            modifyResizeMethods( true, true, true );
             break;
+
+        case PERCENT: //fall through
+        default:
+            modifyResizeMethods( true, true, false );
+            break;
+    }
+
+    if( data.toInt() != MAX )
+    {
+        m_resizeY->show();
+        m_resizeYLabel->show();
+        m_resizeXLabel->setText( tr( "Width" ) );
+        m_aspectLock->show();
+    }
+}
+
+void SquashWindow::modifyResizeMethods( bool showWidth, bool showHeight, bool isPixel )
+{
+    m_resizeXLabel->setEnabled( showWidth );
+    m_resizeX->setEnabled( showWidth );
+    m_resizeYLabel->setEnabled( showHeight );
+    m_resizeY->setEnabled( showHeight );
+
+    m_aspectLock->setEnabled( showWidth && showHeight );
+
+    if( !isPixel )
+    {
+        m_resizeX->setSuffix( tr( "%" ) );
+        m_resizeY->setSuffix( tr( "%" ) );
+
+        m_resizeX->setValue( 50 );
+        m_resizeY->setValue( 50 );
+
+        m_resizeX->setDecimals( 2 );
+        m_resizeY->setDecimals( 2 );
+    }
+    else
+    {
+        m_resizeX->setSuffix( tr( "px" ) );
+        m_resizeY->setSuffix( tr( "px" ) );
+
+        m_resizeX->setValue( 350 );
+        m_resizeY->setValue( 350 );
+
+        m_resizeX->setDecimals( 0 );
+        m_resizeY->setDecimals( 0 );
     }
 }
 

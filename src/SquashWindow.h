@@ -67,6 +67,7 @@ class SquashWindow : public QMainWindow
         void writeSettings();
 
         void enableSettings( const bool enable );
+        void modifyResizeMethods( bool showWidth, bool showHeight, bool isPixel );
 
         void addImages( QStringList images );
         bool validUrls( QList<QUrl> list );
