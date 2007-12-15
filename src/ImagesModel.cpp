@@ -84,6 +84,7 @@ bool ImagesModel::removeRows( int row, int count, const QModelIndex &parent )
         ++beginRow;
         emit imageRemoved();
     }
+    updateLoadStatus();
 
     endRemoveRows();
     return true;
