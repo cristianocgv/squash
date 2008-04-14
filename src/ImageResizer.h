@@ -39,14 +39,24 @@ class ImageResizer : public QThread
         void run();
 
     private:
+        int             m_resizeMethod;
+        enum ResizeScale
+        {
+            PERCENT,
+            PIXEL,
+            WIDTH,
+            HEIGHT,
+            MAX
+        };
+
         QMutex          m_mutex;
         QWaitCondition  m_condition;
 
         bool            m_abort;
         int             m_failCount;
 
-        double          m_percentX;
-        double          m_percentY;
+        double          m_resizeX;
+        double          m_resizeY;
         QDir            m_saveDirectory;
         QString         m_fileSuffix;
         bool            m_overwrite;

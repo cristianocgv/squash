@@ -14,6 +14,7 @@
 
 ImageResizer::ImageResizer( QObject *parent )
     : QThread( parent )
+    , m_resizeMethod( PERCENT )
     , m_abort( false )
 {
 }
@@ -27,11 +28,12 @@ void ImageResizer::init()
 {
     QMutexLocker locker(&m_mutex);
     m_failCount = 0;
-    m_percentX      = SquashWindow::instance()->widthPercentage();
-    m_percentY      = SquashWindow::instance()->heightPercentage();
+    m_resizeX       = SquashWindow::instance()->resizeWidth();
+    m_resizeY       = SquashWindow::instance()->resizeHeight();
     m_saveDirectory = QDir( SquashWindow::instance()->saveDirectory() );
     m_fileSuffix    = SquashWindow::instance()->fileSuffix();
     m_overwrite     = SquashWindow::instance()->overwrite();
+    m_resizeMethod  = SquashWindow::instance()->resizeMethod();
 }
 
 void ImageResizer::load( QString filename )
@@ -113,9 +115,36 @@ void ImageResizer::run()
         QImage image( filename );
 
         QSize originalSize = image.size();
-        QSize scaledSize   = QSize( (int)( originalSize.width() * m_percentX / 100 ), (int)( originalSize.height() * m_percentY / 100 ) );
+        QSize newSize;
+        double percentage  = 0;
 
-        image = image.scaled( scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+        switch( m_resizeMethod )
+        {
+            case PERCENT:
+                newSize = QSize( (int)( originalSize.width() * m_resizeX / 100 ), (int)( originalSize.height() * m_resizeY / 100 ) );
+
+            case WIDTH:
+                percentage = m_resizeX / originalSize.width();
+                newSize = QSize( (int)( originalSize.width() * percentage ), (int)( originalSize.height() * percentage ) );
+                break;
+
+            case HEIGHT:
+                percentage = m_resizeY / originalSize.width();
+                newSize = QSize( (int)( originalSize.width() * percentage ), (int)( originalSize.height() * percentage ) );
+                break;
+
+            case PIXEL:
+                newSize = QSize( m_resizeX, m_resizeY );
+                break;
+
+            default:
+                qDebug() << "Invalid resize method: " << m_resizeMethod;
+                emit imageResizeFailed( filename );
+                continue;
+
+        }
+
+        image = image.scaled( newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
         qDebug() << QString( "Saving scaled image %1 to %2" ).arg( info.fileName(), scaledFilename );
         image.save( scaledFilename );
 

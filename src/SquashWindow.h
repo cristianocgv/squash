@@ -20,23 +20,24 @@ class SquashWindow : public QMainWindow
     Q_OBJECT
 
     public:
-       ~SquashWindow() { }
-       static SquashWindow *instance()
-       {
-           if( !s_instance )
-               s_instance = new SquashWindow();
-           return s_instance;
-       }
+        ~SquashWindow() { }
+        static SquashWindow *instance()
+        {
+            if( !s_instance )
+                s_instance = new SquashWindow();
+            return s_instance;
+        }
 
-       void setStatusBarText( const QString &text );
-       void resetAddImagesButton();
-       void resetResizeImagesButton();
+        void setStatusBarText( const QString &text );
+        void resetAddImagesButton();
+        void resetResizeImagesButton();
 
-       double  widthPercentage()  const { return m_resizeX->value(); }
-       double  heightPercentage() const { return m_resizeY->value(); }
-       QString saveDirectory()    const { return m_saveDirectory->text(); }
-       QString fileSuffix()       const { return m_fileSuffix->text(); }
-       bool    overwrite()        const { return m_overwriteFiles->checkState() == Qt::Checked; }
+        double  resizeWidth()      const { return m_resizeX->value(); }
+        double  resizeHeight()     const { return m_resizeY->value(); }
+        QString saveDirectory()    const { return m_saveDirectory->text(); }
+        QString fileSuffix()       const { return m_fileSuffix->text(); }
+        bool    overwrite()        const { return m_overwriteFiles->checkState() == Qt::Checked; }
+        int     resizeMethod()     const { return m_resizeMethod; }
 
     protected:
         virtual void closeEvent( QCloseEvent *event );
@@ -76,12 +77,6 @@ class SquashWindow : public QMainWindow
         ImagesView  *m_imageView;
         QToolBar    *m_toolBar;
 
-        /// ADD IMAGES ACTION
-
-        QAction   *m_addImages;
-        bool       m_stopImageAdd;
-        QByteArray m_dialogSettings;
-
         /// SIZE SETTINGS
 
         enum ResizeScale
@@ -92,6 +87,7 @@ class SquashWindow : public QMainWindow
             HEIGHT,
             MAX
         };
+        int             m_resizeMethod;
 
         QComboBox      *m_resizeCombo;
         QDoubleSpinBox *m_resizeX; // new width of images
@@ -106,6 +102,12 @@ class SquashWindow : public QMainWindow
         QPushButton *m_directoryChooser;
         QCheckBox   *m_overwriteFiles;
         QLineEdit   *m_fileSuffix;
+
+        /// ADD IMAGES ACTION
+
+        QAction   *m_addImages;
+        bool       m_stopImageAdd;
+        QByteArray m_dialogSettings;
 
         /// RESIZE IMAGES ACTION
 
