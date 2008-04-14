@@ -142,10 +142,10 @@ void SquashWindow::createToolBar()
     QGridLayout *resizeLayout  = new QGridLayout;
 
     m_resizeCombo = new QComboBox();
-    m_resizeCombo->addItem( tr( "Pixels" ), QVariant( PIXEL ) );
+    m_resizeCombo->addItem( tr( "Percent" ), QVariant( PERCENT ) );
     m_resizeCombo->addItem( tr( "Set height" ), QVariant( HEIGHT ) );
     m_resizeCombo->addItem( tr( "Set width" ), QVariant( WIDTH ) );
-    m_resizeCombo->addItem( tr( "Percent" ), QVariant( PERCENT ) );
+    m_resizeCombo->addItem( tr( "Pixels" ), QVariant( PIXEL ) );
     //m_resizeCombo->addItem( tr( "Set maximum side length" ), QVariant( MAX ) );
 
     connect( m_resizeCombo, SIGNAL( activated( int ) ), this, SLOT( resizeMethodChanged( int ) ) );
