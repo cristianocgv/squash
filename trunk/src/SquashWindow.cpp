@@ -18,6 +18,7 @@ SquashWindow *SquashWindow::s_instance = 0;
 
 SquashWindow::SquashWindow( QWidget *parent, Qt::WindowFlags flags )
     : QMainWindow( parent, flags )
+    , m_resizeMethod( PERCENT )
     , m_stopImageAdd( false )
     , m_stopImageResize( false )
 {
@@ -72,8 +73,8 @@ void SquashWindow::writeSettings()
     QSettings settings( getSettingsPath(), QSettings::NativeFormat );
 #endif
 
-    settings.setValue( "resize/x-percent", widthPercentage() );
-    settings.setValue( "resize/y-percent", heightPercentage() );
+    settings.setValue( "resize/width", resizeWidth() );
+    settings.setValue( "resize/height", resizeHeight() );
     settings.setValue( "resize/aspect-lock", ( m_aspectLock->isChecked() ) );
 
     settings.setValue( "save/directory", saveDirectory() );
@@ -94,8 +95,8 @@ void SquashWindow::readSettings()
     QSettings settings( getSettingsPath(), QSettings::NativeFormat );
 #endif
 
-    int x_percent = settings.value( "resize/x-percent", 50 ).toInt();
-    int y_percent = settings.value( "resize/y-percent", 50 ).toInt();
+    int x_percent = settings.value( "resize/width", 50 ).toInt();
+    int y_percent = settings.value( "resize/height", 50 ).toInt();
     bool lockAspect = settings.value( "resize/aspect-lock", true ).toBool();
 
     QString save = settings.value( "save/directory", QDir::toNativeSeparators( QDir::homePath() ) ).toString();
@@ -145,7 +146,7 @@ void SquashWindow::createToolBar()
     m_resizeCombo->addItem( tr( "Pixels" ), QVariant( PIXEL ) );
     m_resizeCombo->addItem( tr( "Set height" ), QVariant( HEIGHT ) );
     m_resizeCombo->addItem( tr( "Set width" ), QVariant( WIDTH ) );
-    m_resizeCombo->addItem( tr( "Set maximum side length" ), QVariant( MAX ) );
+    //m_resizeCombo->addItem( tr( "Set maximum side length" ), QVariant( MAX ) );
 
     connect( m_resizeCombo, SIGNAL( activated( int ) ), this, SLOT( resizeMethodChanged( int ) ) );
 
@@ -423,6 +424,8 @@ void SquashWindow::resizeMethodChanged( int index )
         m_resizeXLabel->setText( tr( "Width" ) );
         m_aspectLock->show();
     }
+
+    m_resizeMethod = data.toInt();
 }
 
 void SquashWindow::modifyResizeMethods( bool showWidth, bool showHeight, bool isPixel )
