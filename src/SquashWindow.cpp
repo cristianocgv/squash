@@ -76,6 +76,7 @@ void SquashWindow::writeSettings()
     settings.setValue( "resize/width", resizeWidth() );
     settings.setValue( "resize/height", resizeHeight() );
     settings.setValue( "resize/aspect-lock", ( m_aspectLock->isChecked() ) );
+    settings.setValue( "resize/method", resizeMethod() );
 
     settings.setValue( "save/directory", saveDirectory() );
     settings.setValue( "save/suffix", fileSuffix() );
@@ -95,11 +96,12 @@ void SquashWindow::readSettings()
     QSettings settings( getSettingsPath(), QSettings::NativeFormat );
 #endif
 
-    int x_percent = settings.value( "resize/width", 50 ).toInt();
-    int y_percent = settings.value( "resize/height", 50 ).toInt();
-    bool lockAspect = settings.value( "resize/aspect-lock", true ).toBool();
+    int width          = settings.value( "resize/width", 50 ).toInt();
+    int height         = settings.value( "resize/height", 50 ).toInt();
+    bool lockAspect    = settings.value( "resize/aspect-lock", true ).toBool();
+    int m_resizeMethod = settings.value( "resize/method", PERCENT ).toInt();
 
-    QString save = settings.value( "save/directory", QDir::toNativeSeparators( QDir::homePath() ) ).toString();
+    QString save   = settings.value( "save/directory", QDir::toNativeSeparators( QDir::homePath() ) ).toString();
     QString suffix = settings.value( "save/suffix", QString("") ).toString();
     bool overwrite = settings.value( "save/overwrite", false ).toBool();
 
@@ -109,8 +111,10 @@ void SquashWindow::readSettings()
 
     // set the aspect locking before the values
     m_aspectLock->setChecked( lockAspect );
-    m_resizeX->setValue( x_percent );
-    m_resizeY->setValue( y_percent );
+    m_resizeX->setValue( width );
+    m_resizeY->setValue( height );
+
+    adjustResizeParameters();
 
     m_saveDirectory->setText( save );
     m_fileSuffix->setText( suffix );
@@ -367,9 +371,15 @@ void SquashWindow::actionStatusSetter() // SLOT
 
 void SquashWindow::enableSettings( const bool enable )
 {
-    m_resizeX->setEnabled( enable );
-    m_resizeY->setEnabled( enable );
-    m_aspectLock->setEnabled( enable );
+    if( !enable )
+    {
+        m_resizeX->setEnabled( enable );
+        m_resizeY->setEnabled( enable );
+        m_aspectLock->setEnabled( enable );
+    }
+    else
+        adjustResizeParameters();
+
     m_saveDirectory->setEnabled( enable );
     m_directoryChooser->setEnabled( enable );
     m_fileSuffix->setEnabled( enable );
@@ -388,8 +398,13 @@ void SquashWindow::resizeMethodChanged( int index )
     QVariant data = m_resizeCombo->itemData( index );
     if( !data.isValid() )
         return;
+    m_resizeMethod = data.toInt();
+    adjustResizeParameters();
+}
 
-    switch( data.toInt() )
+void SquashWindow::adjustResizeParameters()
+{
+    switch( m_resizeMethod )
     {
         case MAX:
             modifyResizeMethods( true, false, true );
@@ -417,15 +432,13 @@ void SquashWindow::resizeMethodChanged( int index )
             break;
     }
 
-    if( data.toInt() != MAX )
+    if( m_resizeMethod != MAX )
     {
         m_resizeY->show();
         m_resizeYLabel->show();
         m_resizeXLabel->setText( tr( "Width" ) );
         m_aspectLock->show();
     }
-
-    m_resizeMethod = data.toInt();
 }
 
 void SquashWindow::modifyResizeMethods( bool showWidth, bool showHeight, bool isPixel )
