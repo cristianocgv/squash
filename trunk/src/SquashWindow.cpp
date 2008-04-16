@@ -18,7 +18,6 @@ SquashWindow *SquashWindow::s_instance = 0;
 
 SquashWindow::SquashWindow( QWidget *parent, Qt::WindowFlags flags )
     : QMainWindow( parent, flags )
-    , m_resizeMethod( PERCENT )
     , m_stopImageAdd( false )
     , m_stopImageResize( false )
 {
@@ -99,7 +98,7 @@ void SquashWindow::readSettings()
     int width          = settings.value( "resize/width", 50 ).toInt();
     int height         = settings.value( "resize/height", 50 ).toInt();
     bool lockAspect    = settings.value( "resize/aspect-lock", true ).toBool();
-    int m_resizeMethod = settings.value( "resize/method", PERCENT ).toInt();
+    int resizeMethod   = settings.value( "resize/method", PERCENT ).toInt();
 
     QString save   = settings.value( "save/directory", QDir::toNativeSeparators( QDir::homePath() ) ).toString();
     QString suffix = settings.value( "save/suffix", QString("") ).toString();
@@ -113,8 +112,7 @@ void SquashWindow::readSettings()
     m_aspectLock->setChecked( lockAspect );
     m_resizeX->setValue( width );
     m_resizeY->setValue( height );
-
-    adjustResizeParameters();
+    m_resizeCombo->setCurrentIndex( resizeMethod );
 
     m_saveDirectory->setText( save );
     m_fileSuffix->setText( suffix );
@@ -146,13 +144,13 @@ void SquashWindow::createToolBar()
     QGridLayout *resizeLayout  = new QGridLayout;
 
     m_resizeCombo = new QComboBox();
-    m_resizeCombo->addItem( tr( "Percent" ), QVariant( PERCENT ) );
-    m_resizeCombo->addItem( tr( "Set height" ), QVariant( HEIGHT ) );
-    m_resizeCombo->addItem( tr( "Set width" ), QVariant( WIDTH ) );
-    m_resizeCombo->addItem( tr( "Pixels" ), QVariant( PIXEL ) );
-    //m_resizeCombo->addItem( tr( "Set maximum side length" ), QVariant( MAX ) );
+    m_resizeCombo->addItem( tr( "Percent" ), PERCENT );
+    m_resizeCombo->addItem( tr( "Set Width" ), WIDTH );
+    m_resizeCombo->addItem( tr( "Set Height" ), HEIGHT );
+    m_resizeCombo->addItem( tr( "Pixels" ), PIXEL );
+    //m_resizeCombo->addItem( tr( "Set maximum side length" ), MAX );
 
-    connect( m_resizeCombo, SIGNAL( activated( int ) ), this, SLOT( resizeMethodChanged( int ) ) );
+    connect( m_resizeCombo, SIGNAL( activated( int ) ), this, SLOT( adjustResizeParameters() ) );
 
     m_resizeXLabel = new QLabel( tr( "Width" ) );
     m_resizeX = new QDoubleSpinBox;
@@ -393,18 +391,9 @@ void SquashWindow::resetResizeImagesButton()
     m_stopImageResize = false;
 }
 
-void SquashWindow::resizeMethodChanged( int index )
-{
-    QVariant data = m_resizeCombo->itemData( index );
-    if( !data.isValid() )
-        return;
-    m_resizeMethod = data.toInt();
-    adjustResizeParameters();
-}
-
 void SquashWindow::adjustResizeParameters()
 {
-    switch( m_resizeMethod )
+    switch( m_resizeCombo->currentIndex() )
     {
         case MAX:
             modifyResizeMethods( true, false, true );
@@ -432,7 +421,7 @@ void SquashWindow::adjustResizeParameters()
             break;
     }
 
-    if( m_resizeMethod != MAX )
+    if( m_resizeCombo->currentIndex() != MAX )
     {
         m_resizeY->show();
         m_resizeYLabel->show();
