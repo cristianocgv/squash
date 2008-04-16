@@ -37,7 +37,7 @@ class SquashWindow : public QMainWindow
         QString saveDirectory()    const { return m_saveDirectory->text(); }
         QString fileSuffix()       const { return m_fileSuffix->text(); }
         bool    overwrite()        const { return m_overwriteFiles->checkState() == Qt::Checked; }
-        int     resizeMethod()     const { return m_resizeMethod; }
+        int     resizeMethod()     const { return m_resizeCombo->currentIndex(); }
 
     protected:
         virtual void closeEvent( QCloseEvent *event );
@@ -48,7 +48,7 @@ class SquashWindow : public QMainWindow
     private slots:
         void addImages();
         void resizeImages();
-        void resizeMethodChanged( int index );
+        void adjustResizeParameters();
         void resizeWidthChanged( double width );
         void resizeHeightChanged( double height );
 
@@ -69,7 +69,6 @@ class SquashWindow : public QMainWindow
 
         void enableSettings( const bool enable );
         void modifyResizeMethods( bool showWidth, bool showHeight, bool isPixel );
-        void adjustResizeParameters();
 
         void addImages( QStringList images );
         bool validUrls( QList<QUrl> list );
@@ -82,13 +81,12 @@ class SquashWindow : public QMainWindow
 
         enum ResizeScale
         {
-            PERCENT,
-            PIXEL,
-            WIDTH,
-            HEIGHT,
-            MAX
+            PERCENT = 0,
+            WIDTH   = 1,
+            HEIGHT  = 2,
+            PIXEL   = 3,
+            MAX     = 4
         };
-        int             m_resizeMethod;
 
         QComboBox      *m_resizeCombo;
         QDoubleSpinBox *m_resizeX; // new width of images

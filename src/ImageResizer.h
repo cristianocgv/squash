@@ -42,11 +42,11 @@ class ImageResizer : public QThread
         int             m_resizeMethod;
         enum ResizeScale
         {
-            PERCENT,
-            PIXEL,
-            WIDTH,
-            HEIGHT,
-            MAX
+            PERCENT = 0,
+            WIDTH   = 1,
+            HEIGHT  = 2,
+            PIXEL   = 3,
+            MAX     = 4
         };
 
         QMutex          m_mutex;
