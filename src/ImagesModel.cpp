@@ -40,11 +40,14 @@ QVariant ImagesModel::data( const QModelIndex &index, int role ) const
     {
         QString error = "\n";
         if( !m_errors.at( index.row() ).isEmpty() )
-            error = tr( "Resize Failed" );
+            error += tr( "Resize Failed" ) + "\n";
         QFileInfo info( m_filenames.at( index.row() ) );
-        QString description = info.fileName() + "\n" + m_descriptions.at( index.row() );
+        QString description = info.fileName() + error + m_descriptions.at( index.row() );
         return description;
     }
+
+    if( role == Qt::ForegroundRole && !m_errors.at( index.row() ).isEmpty() )
+        return QBrush( Qt::red );
 
     if( role == Qt::ToolTipRole )
         return m_errors.at( index.row() );
