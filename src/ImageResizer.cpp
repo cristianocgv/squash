@@ -1,5 +1,5 @@
 /***************************************************************************
- * copyright            : (C) 2007 Seb Ruiz <ruiz@kde.org>                 *
+ * copyright            : (C) 2007-2008 Seb Ruiz <ruiz@kde.org>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License version 2        *
@@ -89,11 +89,12 @@ void ImageResizer::run()
             if( !m_overwrite )
             {
                 qDebug() << "Image write failed (would not overwrite)";
+                QString error = tr( "Destination image exists" );
                 m_mutex.lock();
                 ++m_failCount;
                 m_fileList.prepend( filename );
                 m_mutex.unlock();
-                emit imageResizeFailed( filename );
+                emit imageResizeFailed( filename, error );
                 continue;
             }
             else
@@ -102,11 +103,12 @@ void ImageResizer::run()
                 if( !removed )
                 {
                     qDebug() << "Image write failed (could not remove)";
+                    QString error = tr( "Could not erase existing image" );
                     m_mutex.lock();
                     ++m_failCount;
                     m_fileList.prepend( filename );
                     m_mutex.unlock();
-                    emit imageResizeFailed( filename );
+                    emit imageResizeFailed( filename, error );
                     continue;
                 }
             }
@@ -139,7 +141,7 @@ void ImageResizer::run()
 
             default:
                 qDebug() << "Invalid resize method: " << m_resizeMethod;
-                emit imageResizeFailed( filename );
+                emit imageResizeFailed( filename, "Invalid resize operation" );
                 continue;
 
         }

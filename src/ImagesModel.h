@@ -1,6 +1,5 @@
 /***************************************************************************
- * copyright            : (C) 2007 Seb Ruiz <ruiz@kde.org>                 *
- *                      :     2005-2007 Trolltech - Puzzle Pieces Example  *
+ * copyright            : (C) 2007-2008 Seb Ruiz <ruiz@kde.org>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License version 2        *
@@ -49,6 +48,7 @@ class ImagesModel : public QAbstractListModel
         void          imageLoaded( const QString &filename, const QImage &thumbnail, const QString &description );
         void          imageLoadFailed( const QString &filename );
         void          imageResized( const QString &filename );
+        void          imageResizeFailed( const QString &filename, const QString &error );
 
     signals:
         void          imageAdded();
@@ -62,6 +62,7 @@ class ImagesModel : public QAbstractListModel
         QStringList   m_filenames;
         QList<QIcon>  m_thumbnails;
         QStringList   m_descriptions;
+        QStringList   m_errors;
 
         int           m_loadCount;
         int           m_resizeCount;
