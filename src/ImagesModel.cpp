@@ -46,6 +46,22 @@ QVariant ImagesModel::data( const QModelIndex &index, int role ) const
         return description;
     }
 
+    if( role == Qt::TextAlignmentRole )
+        return Qt::AlignHCenter;
+
+    if( !m_errors.at( index.row() ).isEmpty() )
+    {
+       if( role == Qt::ForegroundRole )
+           return QBrush( Qt::red );
+
+       if( role == Qt::FontRole )
+       {
+           QFont f = QFont();
+           f.setBold( true );
+           return f;
+       }
+    }
+
     if( role == Qt::ForegroundRole && !m_errors.at( index.row() ).isEmpty() )
         return QBrush( Qt::red );
 
