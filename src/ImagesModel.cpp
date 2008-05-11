@@ -102,6 +102,13 @@ bool ImagesModel::removeRows( int row, int count, const QModelIndex &parent )
 
 void ImagesModel::addImage( const QString filename )
 {
+    if( m_filenames.contains( filename ) )
+    {
+        m_loadCount--;
+        updateLoadStatus();
+        return;
+    }
+
     m_imageLoader.load( filename );
 }
 
