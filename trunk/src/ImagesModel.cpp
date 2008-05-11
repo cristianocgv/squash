@@ -1,6 +1,5 @@
 /***************************************************************************
- * copyright            : (C) 2007 Seb Ruiz <ruiz@kde.org>                 *
- *                      :     2005-2007 Trolltech - Puzzle Pieces Example  *
+ * copyright            : (C) 2007-2008 Seb Ruiz <ruiz@kde.org>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License version 2        *
@@ -23,9 +22,10 @@ ImagesModel::ImagesModel(QObject *parent)
               this,             SLOT( imageLoaded( const QString &, const QImage &, const QString & ) ) );
     connect( &m_imageResizer, SIGNAL( imageResized( const QString & ) ),
               this,             SLOT( imageResized( const QString & ) ) );
-
     connect( &m_imageLoader,  SIGNAL( imageLoadFailed( const QString & ) ),
               this,             SLOT( imageLoadFailed( const QString & ) ) );
+    connect( &m_imageResizer, SIGNAL( imageResizeFailed( const QString &, const QString & ) ),
+              this,             SLOT( imageResizeFailed( const QString &, const QString & ) ) );
 }
 
 QVariant ImagesModel::data( const QModelIndex &index, int role ) const
@@ -38,10 +38,16 @@ QVariant ImagesModel::data( const QModelIndex &index, int role ) const
 
     if( role == Qt::DisplayRole )
     {
+        QString error = "\n";
+        if( !m_errors.at( index.row() ).isEmpty() )
+            error = tr( "Resize Failed" );
         QFileInfo info( m_filenames.at( index.row() ) );
         QString description = info.fileName() + "\n" + m_descriptions.at( index.row() );
         return description;
     }
+
+    if( role == Qt::ToolTipRole )
+        return m_errors.at( index.row() );
 
     if( role == Qt::UserRole )
         return m_filenames.at( index.row() );
@@ -81,6 +87,7 @@ bool ImagesModel::removeRows( int row, int count, const QModelIndex &parent )
         m_thumbnails.removeAt( beginRow );
         m_filenames.removeAt( beginRow );
         m_descriptions.removeAt( beginRow );
+        m_errors.removeAt( beginRow );
         ++beginRow;
         emit imageRemoved();
     }
@@ -117,6 +124,7 @@ void ImagesModel::imageLoaded( const QString &filename, const QImage &thumbnail,
     m_filenames.insert( row, filename );
     m_thumbnails.insert( row, iconThumb );
     m_descriptions.insert( row, description );
+    m_errors.insert( row, QString() );
 
     endInsertRows();
 
@@ -175,6 +183,14 @@ void ImagesModel::imageResized( const QString &filename )
         m_resizeCount = 0;
     }
     SquashWindow::instance()->setStatusBarText( text );
+}
+
+void ImagesModel::imageResizeFailed( const QString &filename, const QString &error )
+{
+    int row = m_filenames.indexOf( filename );
+    if( row < 0 ) return;
+
+    m_errors.replace( row, error );
 }
 
 void ImagesModel::stopResizeImages()

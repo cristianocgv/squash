@@ -1,5 +1,5 @@
 /***************************************************************************
- * copyright            : (C) 2007 Seb Ruiz <ruiz@kde.org>                 *
+ * copyright            : (C) 2007-2008 Seb Ruiz <ruiz@kde.org>            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License version 2        *
@@ -33,13 +33,13 @@ class ImageResizer : public QThread
 
     signals:
         void imageResized( const QString &filename );
-        void imageResizeFailed( const QString &filename );
+        void imageResizeFailed( const QString &filename, const QString &error );
 
     protected:
         void run();
 
     private:
-        int             m_resizeMethod;
+        int  m_resizeMethod;
         enum ResizeScale
         {
             PERCENT = 0,
