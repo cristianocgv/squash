@@ -1,0 +1,8 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+This page will explain how to install Squash on Mac OS X.
+
+
+= Details =
+Before attempting to install OR build Squash on Mac OS X you MUST have QT installed. You can download the open source version of QT at [http://trolltech.com/developer/downloads/qt/mac].
