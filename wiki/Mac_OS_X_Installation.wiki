@@ -1,5 +1,4 @@
-#summary One-sentence summary of this page.
-
+#This page contains information about installing on Mac OS X.
 = Introduction =
 This page will explain how to install Squash on Mac OS X.
 
