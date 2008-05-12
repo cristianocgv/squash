@@ -1,4 +1,5 @@
-#This page contains information about installing on Mac OS X.
+Mac OS X Installation Information
+
 = Introduction =
 This page will explain how to install Squash on Mac OS X.
 
