@@ -124,6 +124,7 @@ void ImageResizer::run()
         {
             case PERCENT:
                 newSize = QSize( (int)( originalSize.width() * m_resizeX / 100 ), (int)( originalSize.height() * m_resizeY / 100 ) );
+                break;
 
             case WIDTH:
                 percentage = m_resizeX / originalSize.width();
@@ -131,7 +132,7 @@ void ImageResizer::run()
                 break;
 
             case HEIGHT:
-                percentage = m_resizeY / originalSize.width();
+                percentage = m_resizeY / originalSize.height();
                 newSize = QSize( (int)( originalSize.width() * percentage ), (int)( originalSize.height() * percentage ) );
                 break;
 
@@ -146,8 +147,8 @@ void ImageResizer::run()
 
         }
 
+        qDebug() << QString( "Saving scaled image %1 to %2 " ).arg( info.fileName(), scaledFilename ) << newSize;
         image = image.scaled( newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
-        qDebug() << QString( "Saving scaled image %1 to %2" ).arg( info.fileName(), scaledFilename );
         image.save( scaledFilename );
 
         emit imageResized( filename );
